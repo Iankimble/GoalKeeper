@@ -2,6 +2,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const expressValidator = require('express-validator');
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,10 +11,12 @@ dotenv.config();
 const app = express();
 
 // Routes
-const routes = require("./routes/routes");
+const routes = require("./routes/post-routes");
 
 // Middleware
 app.use(morgan("dev"));
+app.use(bodyParser.json());
+app.use(expressValidator());
 
 app.use("/", routes);
 
@@ -24,12 +28,12 @@ mongoose
   })
   .then(() => console.log("Database connected"))
   .catch(err => {
-  console.log(`db connection error : ${err.message}`)
-  process.exit()
-});
+    console.log(`db connection error : ${err.message}`);
+    process.exit();
+  });
 
 // Port
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App listening on port: ${port}`);
 });
