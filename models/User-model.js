@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 // Package that creates random strings and timestamps
 const uuidv1 = require("uuid/v1");
 
@@ -21,12 +22,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-
   salt: String,
-
   created: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   updated: Date
 });
@@ -38,22 +37,25 @@ const userSchema = new mongoose.Schema({
 
 userSchema
   .virtual("password")
-  .set(password => {
-    // Creating a temporary password called _password
+  .set(function(password) {
+    // create temporary variable called _password
     this._password = password;
-    // Creating the timestap
+    // generate a timestamp
     this.salt = uuidv1();
-    // Creating an ecrypted password
+    // encryptPassword()
     this.hashed_password = this.encryptPassword(password);
   })
-  // returning the new ecnypted passwrod
-  .get(() => {
+  .get(function() {
     return this._password;
   });
 
 // methods
 userSchema.methods = {
-  encryptPassword: password => {
+  authenticate: function(plainText) {
+    return this.encryptPassword(plainText) === this.hashed_password;
+  },
+
+  encryptPassword: function(password) {
     if (!password) return "";
     try {
       return crypto
