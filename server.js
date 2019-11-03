@@ -3,7 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const expressValidator = require('express-validator');
+const expressValidator = require("express-validator");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -12,13 +12,16 @@ const app = express();
 
 // Routes
 const routes = require("./routes/post-routes");
+const routes = require("./routes/auth-routes");
 
 // Middleware
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(expressValidator());
-
 app.use("/", routes);
+
+// app.use('/', postRoutes);
+// app.use('/', authRoutes);
 
 // Mongo Atlas DB
 mongoose
