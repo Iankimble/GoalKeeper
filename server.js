@@ -14,6 +14,7 @@ const app = express();
 // Routes
 const postRoutes = require("./routes/post-routes");
 const authRoutes = require("./routes/auth-routes");
+const userRoutes = require("./routes/user-routes");
 
 // Middleware
 app.use(morgan("dev"));
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use(expressValidator());
 app.use("/", postRoutes);
 app.use("/", authRoutes);
+app.use("/", userRoutes);
 app.use((err, req, res, next) => {
   if (err.name === "UnauthorizedError") {
     res.status(401).json({ error: "Unauthroized user" });
