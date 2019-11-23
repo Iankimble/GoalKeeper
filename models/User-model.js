@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
-
-// Package that creates random strings and timestamps
 const uuidv1 = require("uuid/v1");
-
-// Define
 const crypto = require("crypto");
+// const { objectId } = mongoose.Schema;
 
 // model for basic user profile data
 const userSchema = new mongoose.Schema({

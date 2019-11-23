@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const expressValidator = require("express-validator");
+const fs = require("fs");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -15,6 +16,18 @@ const app = express();
 const postRoutes = require("./routes/post-routes");
 const authRoutes = require("./routes/auth-routes");
 const userRoutes = require("./routes/user-routes");
+// API docs
+app.get("/", (req, res) => {
+  fs.readFile("docs/api_docs.json", (err, data) => {
+    if (err) {
+      res.status(400).json({
+        error: err
+      });
+    }
+    const docs = JSON.parse(data);
+    res.json(docs);
+  });
+});
 
 // Middleware
 app.use(morgan("dev"));

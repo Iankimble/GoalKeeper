@@ -1,0 +1,10 @@
+{
+  "/": "GET all posts",
+  "/signup": "POST signup",
+  "/signin": "POST signin",
+  "/signout": " GET signout",
+  "/users": "GET all users",
+  "/user/:userId": "GET user",
+  "/user/:userId": "DELETE user",
+  "/posts": "GET all posts"
+}

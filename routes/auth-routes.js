@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.post("/signup", userSignupValidator, signup);
 router.post("/signin", signin);
-
 router.get("/signout", signout);
 
 // routes containing userId, app will execute userById() first
