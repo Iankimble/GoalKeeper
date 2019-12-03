@@ -17,6 +17,7 @@ const app = express();
 const postRoutes = require("./routes/post-routes");
 const authRoutes = require("./routes/auth-routes");
 const userRoutes = require("./routes/user-routes");
+
 // API docs
 app.get("/", (req, res) => {
   fs.readFile("docs/api_docs.json", (err, data) => {
