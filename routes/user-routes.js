@@ -10,7 +10,7 @@ const { requireSignin } = require("../controllers/auth-controller");
 
 const router = express.Router();
 
-router.get("/users", requireSignin, allUsers);
+router.get("/users", allUsers);
 
 router.get("/user/:userId", requireSignin, getUser);
 
