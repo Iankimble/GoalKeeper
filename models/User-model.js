@@ -24,7 +24,11 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  updated: Date
+  updated: Date,
+  photo: {
+    data: Buffer,
+    contentType: String
+  }
 });
 
 // Pulling the 'password' string from the 'user' object to create a complex password in place

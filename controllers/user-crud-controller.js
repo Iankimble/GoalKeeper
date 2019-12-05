@@ -1,5 +1,7 @@
 const _ = require("lodash");
 const User = require("../models/User-model");
+const fs = require("fs");
+const formidable = require("formidable");
 
 exports.userById = (req, res, next, id) => {
   User.findById(id).exec((err, user) => {
@@ -39,19 +41,49 @@ exports.getUser = (req, res) => {
   return res.json(req.profile);
 };
 
+// exports.updateUser = (req, res, next) => {
+//   let user = req.profile;
+//   user = _.extend(user, req.body); // mutate the source obj.
+//   user.updated = Date.now();
+//   user.save(err => {
+//     if (err) {
+//       return res.status(400).json({
+//         error: "you are not an authorized user to perform this action"
+//       });
+//     }
+//     user.hashed_password = undefined;
+//     user.salt = undefined;
+//     res.json({ user });
+//   });
+// };
+
 exports.updateUser = (req, res, next) => {
-  let user = req.profile;
-  user = _.extend(user, req.body); // mutate the source obj.
-  user.updated = Date.now();
-  user.save(err => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (err, fields, files) => {
     if (err) {
       return res.status(400).json({
-        error: "you are not an authorized user to perform this action"
+        error: "photo could not be uploaded"
       });
     }
-    user.hashed_password = undefined;
-    user.salt = undefined;
-    res.json({ user });
+    let user = req.profile;
+    user = _.extend(user, fields);
+    user.updated = Date.now();
+
+    if (files.photo) {
+      user.photo.data = fs.readFileSync(files.photo.path);
+      user.photo.contentType = files.photo.type;
+    }
+    user.save((err, res) => {
+      if (err) {
+        return res.status(400).json({
+          err: err
+        });
+      }
+      user.hashed_password = undefined;
+      user.salt = undefined;
+      res.json(user);
+    });
   });
 };
 
