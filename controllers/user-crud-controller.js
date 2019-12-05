@@ -41,22 +41,6 @@ exports.getUser = (req, res) => {
   return res.json(req.profile);
 };
 
-// exports.updateUser = (req, res, next) => {
-//   let user = req.profile;
-//   user = _.extend(user, req.body); // mutate the source obj.
-//   user.updated = Date.now();
-//   user.save(err => {
-//     if (err) {
-//       return res.status(400).json({
-//         error: "you are not an authorized user to perform this action"
-//       });
-//     }
-//     user.hashed_password = undefined;
-//     user.salt = undefined;
-//     res.json({ user });
-//   });
-// };
-
 exports.updateUser = (req, res, next) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
@@ -74,10 +58,10 @@ exports.updateUser = (req, res, next) => {
       user.photo.data = fs.readFileSync(files.photo.path);
       user.photo.contentType = files.photo.type;
     }
-    user.save((err, res) => {
+    user.save((err, result) => {
       if (err) {
         return res.status(400).json({
-          err: err
+          error: err
         });
       }
       user.hashed_password = undefined;
@@ -85,6 +69,14 @@ exports.updateUser = (req, res, next) => {
       res.json(user);
     });
   });
+};
+
+exports.userPhoto = (req, res, next) => {
+  if (req.photo.data) {
+    res.set(("Content-Type", req.profile.photo.contentType));
+    return res.send(req.profile.photo.data);
+  }
+  next();
 };
 
 exports.deleteUser = (req, res, next) => {

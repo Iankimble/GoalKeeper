@@ -38,16 +38,24 @@ class Profile extends Component {
   render() {
     const { redirectToSignin, user } = this.state;
     if (redirectToSignin) return <Redirect to="/signin" />;
+
+    const photoUrl = user._id
+      ? `${process.env.REACT_APP_API_URL}/user/photo/${
+          user._id
+        } ?${new Date().getTime()}`
+      : DefaultProfileImg;
+
     return (
       <div className="container">
         <h2 className="mt-5-mb-5">{user.name}</h2>
         <div className="row">
           <div className="col-md-6">
             <img
-              className="card-img-top"
-              src={DefaultProfileImg}
+              style={{ height: "200px", width: "auto" }}
+              className="img-thumbnail"
+              src={photoUrl}
+              onError={i => (i.target.src = `${DefaultProfileImg}`)}
               alt={user.name}
-              style={{ width: "100%", height: "15vw", objectFit: "cover" }}
             />
           </div>
 
@@ -70,6 +78,13 @@ class Profile extends Component {
                 <DeleteUser userId={user._id} />
               </div>
             )}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col md-12 mt-5 mb-5">
+            <hr />
+            <div className="lead">{user.about}</div>
+            <hr />
           </div>
         </div>
       </div>

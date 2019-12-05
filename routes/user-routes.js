@@ -4,7 +4,8 @@ const {
   allUsers,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  userPhoto
 } = require("../controllers/user-crud-controller");
 const { requireSignin } = require("../controllers/auth-controller");
 
@@ -17,6 +18,9 @@ router.get("/user/:userId", requireSignin, getUser);
 router.put("/user/:userId", requireSignin, updateUser);
 
 router.delete("/user/:userId", requireSignin, deleteUser);
+
+//Photo for user
+router.get("/user/phot/userId", userPhoto);
 
 router.param("userId", userById);
 
