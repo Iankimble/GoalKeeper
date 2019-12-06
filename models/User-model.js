@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const uuidv1 = require("uuid/v1");
 const crypto = require("crypto");
-// const { objectId } = mongoose.Schema;
+const { objectId } = mongoose.Schema;
 
 // model for basic user profile data
 const userSchema = new mongoose.Schema({
@@ -24,7 +24,6 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  updated: Date,
   photo: {
     data: Buffer,
     contentType: String
@@ -32,7 +31,8 @@ const userSchema = new mongoose.Schema({
   about: {
     type: String,
     trim: true
-  }
+  },
+  updated: Date
 });
 
 // Pulling the 'password' string from the 'user' object to create a complex password in place

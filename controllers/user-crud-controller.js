@@ -5,9 +5,10 @@ const formidable = require("formidable");
 
 exports.userById = (req, res, next, id) => {
   User.findById(id).exec((err, user) => {
+    console.log("id is ...." + id);
     if (err || !user) {
       return res.status(400).json({
-        error: "User not found"
+        error: "User not found or something weird happened..."
       });
     }
     // adds profile obj in req with user info
@@ -72,7 +73,7 @@ exports.updateUser = (req, res, next) => {
 };
 
 exports.userPhoto = (req, res, next) => {
-  if (req.photo.data) {
+  if (req.profile.photo.data) {
     res.set(("Content-Type", req.profile.photo.contentType));
     return res.send(req.profile.photo.data);
   }

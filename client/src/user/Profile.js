@@ -39,10 +39,10 @@ class Profile extends Component {
     const { redirectToSignin, user } = this.state;
     if (redirectToSignin) return <Redirect to="/signin" />;
 
-    const photoUrl = user._id
+    const photoURL = user._id
       ? `${process.env.REACT_APP_API_URL}/user/photo/${
           user._id
-        } ?${new Date().getTime()}`
+        }?${new Date().getTime()}`
       : DefaultProfileImg;
 
     return (
@@ -53,7 +53,7 @@ class Profile extends Component {
             <img
               style={{ height: "200px", width: "auto" }}
               className="img-thumbnail"
-              src={photoUrl}
+              src={photoURL}
               onError={i => (i.target.src = `${DefaultProfileImg}`)}
               alt={user.name}
             />

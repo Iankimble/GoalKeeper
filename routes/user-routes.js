@@ -20,7 +20,7 @@ router.put("/user/:userId", requireSignin, updateUser);
 router.delete("/user/:userId", requireSignin, deleteUser);
 
 //Photo for user
-router.get("/user/phot/userId", userPhoto);
+router.get("/user/photo/:userId", userPhoto);
 
 router.param("userId", userById);
 
