@@ -5,11 +5,18 @@ const {
   getUser,
   updateUser,
   deleteUser,
-  userPhoto
+  userPhoto,
+  addFollowing,
+  addFollower,
+  removeFollower,
+  removeFollowing
 } = require("../controllers/user-crud-controller");
 const { requireSignin } = require("../controllers/auth-controller");
 
 const router = express.Router();
+
+router.put("/user/follow", requireSignin, addFollowing, addFollower);
+router.put("/user/unfollow", requireSignin, removeFollowing, removeFollower);
 
 router.get("/users", allUsers);
 

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const uuidv1 = require("uuid/v1");
 const crypto = require("crypto");
-const { objectId } = mongoose.Schema;
+const { ObjectId } = mongoose.Schema;
 
 // model for basic user profile data
 const userSchema = new mongoose.Schema({
@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+
+  following: [{ type: ObjectId, ref: "User" }],
+  followers: [{ type: ObjectId, ref: "User" }],
+
   updated: Date
 });
 
