@@ -9,7 +9,8 @@ const {
   addFollowing,
   addFollower,
   removeFollower,
-  removeFollowing
+  removeFollowing,
+  findPeople
 } = require("../controllers/user-crud-controller");
 const { requireSignin } = require("../controllers/auth-controller");
 
@@ -28,6 +29,9 @@ router.delete("/user/:userId", requireSignin, deleteUser);
 
 //Photo for user
 router.get("/user/photo/:userId", userPhoto);
+
+// who to follow
+router.get("/user/findpeople/:userId", requireSignin, findPeople);
 
 router.param("userId", userById);
 
