@@ -103,7 +103,7 @@ export const findPeople = (userId, token) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer'${token}`
+      Authorization: `Bearer ${token}`
     }
   })
     .then(response => {

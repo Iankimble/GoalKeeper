@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { findPeople } from "./api-user";
+import { findPeople } from "./api-user.js";
 import DefaultProfileImg from "../images/avatar.png";
 import { Link } from "react-router-dom";
-import { isAuthenticated } from "../auth/Index";
+import { isAuthenticated } from "../auth/Index.js";
 
 class FindPeople extends Component {
   constructor() {
@@ -21,9 +21,7 @@ class FindPeople extends Component {
       if (data.error) {
         console.log(data.error);
       } else {
-        this.setState({
-          users: data
-        });
+        this.setState({ users: data });
       }
     });
   }
