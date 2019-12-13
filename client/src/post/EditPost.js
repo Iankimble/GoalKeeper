@@ -1,43 +1,56 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { singlePost, update } from "./post-api";
 import { isAuthenticated } from "../auth/Index";
-import { create } from "./post-api";
-import DefaultProfileImg from "../images/avatar.png";
+import { Redirect } from "react-router-dom";
+import DefaultPost from "../images/avatar.png";
 
-// import { updateUser } from "./api-user";
-
-class NewPost extends Component {
+class EditPost extends Component {
   constructor() {
     super();
     this.state = {
+      id: "",
       title: "",
       body: "",
-      photo: "",
+      redirectToProfile: false,
       error: "",
-      user: {},
       fileSize: 0,
-      loading: false,
-      redirectToProfile: false
+      loading: false
     };
   }
 
+  init = postId => {
+    singlePost(postId).then(data => {
+      if (data.error) {
+        this.setState({ redirectToProfile: true });
+      } else {
+        this.setState({
+          id: data.postedBy._id,
+          title: data.title,
+          body: data.body,
+          error: ""
+        });
+      }
+    });
+  };
+
   componentDidMount() {
     this.postData = new FormData();
-    this.setState({ user: isAuthenticated().user });
+    const postId = this.props.match.params.postId;
+    this.init(postId);
   }
 
   isValid = () => {
     const { title, body, fileSize } = this.state;
-    if (title.length === 0 || body.length === 0) {
-      title.setState({ error: "All fields are required", loading: false });
-      return false;
-    }
-
-    if (fileSize > 100000) {
+    if (fileSize > 1000000) {
       this.setState({
-        error: "File size shoube be less than 1MB",
+        error: "File size should be less than 100kb",
         loading: false
       });
+      return false;
+    }
+    if (title.length === 0 || body.length === 0) {
+      this.setState({ error: "All fields are required", loading: false });
+      return false;
     }
     return true;
   };
@@ -45,6 +58,7 @@ class NewPost extends Component {
   handleChange = name => event => {
     this.setState({ error: "" });
     const value = name === "photo" ? event.target.files[0] : event.target.value;
+
     const fileSize = name === "photo" ? event.target.files[0].size : 0;
     this.postData.set(name, value);
     this.setState({ [name]: value, fileSize });
@@ -55,26 +69,27 @@ class NewPost extends Component {
     this.setState({ loading: true });
 
     if (this.isValid()) {
-      const userId = isAuthenticated().user._id;
+      const postId = this.props.match.params.postId;
       const token = isAuthenticated().token;
 
-      create(userId, token, this.postData).then(data => {
+      update(postId, token, this.postData).then(data => {
         if (data.error) this.setState({ error: data.error });
-        else console.log("new post", data);
-        this.setState({
-          loading: false,
-          title: "",
-          body: "",
-          redirectToProfile: true
-        });
+        else {
+          this.setState({
+            loading: false,
+            title: "",
+            body: "",
+            redirectToProfile: true
+          });
+        }
       });
     }
   };
 
-  newPostForm = (title, body) => (
+  editPostForm = (title, body) => (
     <form>
       <div className="form-group">
-        <label className="text-muted">Profile Photo</label>
+        <label className="text-muted">Post Photo</label>
         <input
           onChange={this.handleChange("photo")}
           type="file"
@@ -89,8 +104,7 @@ class NewPost extends Component {
           type="text"
           className="form-control"
           value={title}
-        ></input>
-        <div className="form-group"></div>
+        />
       </div>
 
       <div className="form-group">
@@ -104,35 +118,22 @@ class NewPost extends Component {
       </div>
 
       <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
-        Create post
+        Update Post
       </button>
     </form>
   );
 
   render() {
-    const {
-      title,
-      body,
-      photo,
-      user,
-      error,
-      loading,
-      redirectToProfile
-    } = this.state;
+    const { id, title, body, redirectToProfile, error, loading } = this.state;
 
     if (redirectToProfile) {
-      return <Redirect to={`/user/${user.Id}`} />;
+      return <Redirect to={`/user/${isAuthenticated().user._id}`} />;
     }
-
-    // const photoUrl = id
-    //   ? `${
-    //       process.env.REACT_APP_API_URL
-    //     }/user/photo/${id} ?${new Date().getTime()}`
-    //   : DefaultProfileImg;
 
     return (
       <div className="container">
-        {/* <h2 className="m-5 mb-5">Create post</h2>
+        <h2 className="mt-5 mb-5">{title}</h2>
+
         <div
           className="alert alert-danger"
           style={{ display: error ? "" : "none" }}
@@ -151,33 +152,20 @@ class NewPost extends Component {
         <img
           style={{ height: "200px", width: "auto" }}
           className="img-thumbnail"
-          src={photoUrl}
-          onError={i => (i.target.src = `${DefaultProfileImg}`)}
-          alt={name}
+          src={`${
+            process.env.REACT_APP_API_URL
+          }/post/photo/${id}?${new Date().getTime()}`}
+          onError={i => (i.target.src = `${DefaultPost}`)}
+          alt={title}
         />
 
-        {this.newPostForm(title, body)} */}
+        {isAuthenticated().user.role === "admin" &&
+          this.editPostForm(title, body)}
 
-        <h2 className="mt-5 mb-5">Create a new post</h2>
-        <div
-          className="alert alert-danger"
-          style={{ display: error ? "" : "none" }}
-        >
-          {error}
-        </div>
-
-        {loading ? (
-          <div className="jumbotron text-center">
-            <h2>Loading...</h2>
-          </div>
-        ) : (
-          ""
-        )}
-
-        {this.newPostForm(title, body)}
+        {isAuthenticated().user._id === id && this.editPostForm(title, body)}
       </div>
     );
   }
 }
 
-export default NewPost;
+export default EditPost;
