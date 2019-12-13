@@ -121,7 +121,7 @@ class NewPost extends Component {
     } = this.state;
 
     if (redirectToProfile) {
-      return <Redirect to={`/user/${user.Id}`} />;
+      return <Redirect to={`/user/${user._id}`} />;
     }
 
     // const photoUrl = id

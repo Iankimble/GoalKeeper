@@ -16,7 +16,6 @@ const { userById } = require("../controllers/user-crud-controller");
 
 const router = express.Router();
 
-router.get("/posts", getPosts);
 router.post(
   "/post/new/:userId",
   requireSignin,
@@ -24,14 +23,15 @@ router.post(
   createPostValidator
 );
 
+router.get("/posts", getPosts);
 router.get("/posts/by/:userId", requireSignin, postByUser);
+router.get("/post/:postId", singlePost);
+
 router.put("/post/:postId", requireSignin, isPoster, updatePost);
+router.delete("/post/:postId", requireSignin, isPoster, deletePost);
 
 router.get("/post/new/:userId", requireSignin, postByUser);
 router.get("/posts/by/:userId", requireSignin, postByUser);
-router.get("/post/:postId", singlePost);
-router.put("/post/:postId", requireSignin, isPoster, updatePost);
-router.delete("/post/:postId", requireSignin, isPoster, deletePost);
 
 router.get("/post/photo/:postId", photo);
 

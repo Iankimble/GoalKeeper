@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { list } from "./post-api";
-import DefaultPost from "./";
+import DefaultPost from "../images/avatar.png";
 import { Link } from "react-router-dom";
 
 class Post extends Component {
@@ -11,10 +11,14 @@ class Post extends Component {
     };
   }
 
-  loadPosts = page => {};
-
   componentDidMount() {
-    this.loadPosts(this.state);
+    list().then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        this.setState({ posts: data });
+      }
+    });
   }
   renderPosts = posts => {
     return (
@@ -55,7 +59,7 @@ class Post extends Component {
   };
 
   render() {
-    const { posts, page } = this.state;
+    const { posts } = this.state;
     return (
       <div className="container">
         <h2 className="mt-5 mb-5">

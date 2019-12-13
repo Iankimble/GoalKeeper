@@ -1,9 +1,8 @@
 export const create = (userId, token, post) => {
-  // console.log("USER DATA UPDATE: ", user);
-  return fetch(`${process.env.REACT_APP_API}/post/new/${userId}`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/new/${userId}`, {
     method: "POST",
     headers: {
-      Accept: "applicaiton/json",
+      Accept: "application/json",
       Authorization: `Bearer${token}`
     },
     body: post
@@ -14,8 +13,8 @@ export const create = (userId, token, post) => {
     .catch(err => console.log(err));
 };
 
-export const list = page => {
-  return fetch(`4{process.env.REACT_APP_API_URL}/posts/?page=${page}`, {
+export const list = () => {
+  return fetch(`${process.env.REACT_APP_API_URL}/posts`, {
     method: "GET"
   })
     .then(response => {
@@ -24,8 +23,18 @@ export const list = page => {
     .catch(err => console.log(err));
 };
 
+// export const list = page => {
+//   return fetch(`${process.env.REACT_APP_API_URL}/posts/?page=${page}`, {
+//     method: "GET"
+//   })
+//     .then(response => {
+//       return response.json();
+//     })
+//     .catch(err => console.log(err));
+// };
+
 export const singlePost = postId => {
-  return fetch(`${process.eventNames.REACT_APP_API}/post/${postId}`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
     method: "GET"
   })
     .then(response => {
@@ -35,7 +44,7 @@ export const singlePost = postId => {
 };
 
 export const listByUser = (userId, token) => {
-  return fetch(`${process.env.REACT_APP_API}/posts/by/${userId}`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/posts/by/${userId}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
